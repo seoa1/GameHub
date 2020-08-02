@@ -17,3 +17,9 @@
 .odd_tile {
   background-color: lightgray;
 }
+
+.piece_img {
+  width: 9.5vh;
+  height: 9.5vh;
+  margin: 0;
+}
