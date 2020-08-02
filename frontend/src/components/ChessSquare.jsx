@@ -9,7 +9,12 @@ export default class ChessSquare extends React.Component {
     }
 
     handle_click() {
-        this.props.display(this.props.piece);
+        if (this.props.piece.move_disp) {
+            this.props.move_sel(this.props.piece.pos);
+        }
+        else {
+            this.props.display(this.props.piece);
+        }
     }
 
     render() {

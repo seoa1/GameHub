@@ -28,4 +28,10 @@ export default class Grid {
             }
         }
     }
+
+    move_piece(start_pos, end_pos) {
+        this._board[end_pos[0]][end_pos[1]] = this._board[start_pos[0]][start_pos[1]];
+        this._board[start_pos[0]][start_pos[1]] = new NullPiece(start_pos);
+        this._board[end_pos[0]][end_pos[1]].pos = end_pos;
+    }
 }

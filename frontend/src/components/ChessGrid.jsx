@@ -1,13 +1,13 @@
 import React from 'react';
 import ChessSquare from './ChessSquare';
 
-const ChessGrid = ({grid, display}) => {
+const ChessGrid = ({grid, display, move_sel}) => {
     let i=0;
     return (
         <div className="grid">
             {
                 grid.board.flat(1).map(piece => 
-                    <ChessSquare key={i++} val={i - 1} piece={piece} display={display}/>
+                    <ChessSquare move_sel={move_sel} key={i++} val={i - 1} piece={piece} display={display}/>
                 )
             }
         </div>

@@ -8,23 +8,34 @@ export default class Board extends React.Component{
         super(props);
 
         this.state = {
-            grid: new Grid()
+            grid: new Grid(),
+            selected: null
         }
         this.display_moves = this.display_moves.bind(this);
         this.clear_display_moves = this.clear_display_moves.bind(this);
+        this.move_sel = this.move_sel.bind(this);
+    }
+
+    move_sel(new_pos) {
+        this.state.grid.move_piece(this.state.selected.pos, new_pos);
+        this.clear_display_moves();
+        this.setState({ grid: this.state.grid, selected: null });
     }
 
     display_moves(piece) {
         this.clear_display_moves();
-        if(piece instanceof NullPiece) {
+        if(piece instanceof NullPiece || (this.state.selected != null && piece.color === this.state.selected.color)) {
+            this.setState({ selected: null });
             return;
         }
         let moves = piece.get_poss_moves();
-        console.log(moves);
-        moves.forEach(move => {
-            this.state.grid.board[move[0]][move[1]].move_disp = true;
-        });
-        this.setState({ grid: this.state.grid });
+        if(moves.length > 0) {
+            moves.forEach(move => {
+                this.state.grid.board[move[0]][move[1]].move_disp = true;
+            });
+            this.setState({ grid: this.state.grid, selected: piece });
+        }
+
     }
 
     clear_display_moves() {
@@ -37,7 +48,7 @@ export default class Board extends React.Component{
     render() {
         return (
             <div className="board">
-                <ChessGrid grid={this.state.grid} display={this.display_moves}/>
+                <ChessGrid move_sel={this.move_sel} grid={this.state.grid} display={this.display_moves}/>
             </div>
         )
     }

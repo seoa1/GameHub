@@ -31,11 +31,11 @@ class Piece {
     }
 
     is_piece(pos) {
-        return (!this._board[pos[0]][pos[1]] instanceof NullPiece);
+        return !(this._board[pos[0]][pos[1]] instanceof NullPiece);
     }
 
     opp_color_at(pos) {
-        return (this._board[pos[0][pos[1]]].color !== this._color);
+        return (this._board[pos[0]][pos[1]].color !== this._color);
     }
 
     extend_moves(DIRS) {
@@ -74,18 +74,25 @@ export class Pawn extends Piece{
         else {
             dir = 1;
         }
-        let poss_moves = [[pos_row + dir, pos_col]];
+        let poss_moves = [];
+        let forward_one = [pos_row + dir, pos_col];
+        let pushable = false;
+        if(!this.is_piece(forward_one)) {
+            pushable = true;
+            poss_moves.push(forward_one);
+        }
         // 2 square push
-        if((dir < 0 && pos_row === 6) || (dir > 0 && pos_row === 1)) {
-            poss_moves.push([pos_row + dir * 2, pos_col]);
+        let forward_two = [pos_row + dir * 2, pos_col];
+        if(pushable && !this.is_piece(forward_two) && ((dir < 0 && pos_row === 6) || (dir > 0 && pos_row === 1))) {
+            poss_moves.push(forward_two);
         }
         // sideways take
         let side_left = [pos_row + dir, pos_col - 1];
         let side_right = [pos_row + dir, pos_col + 1];
-        if(this.is_piece(side_left)) {
+        if(this.valid_move(side_left) && this.is_piece(side_left) && this.opp_color_at(side_left)) {
             poss_moves.push(side_left);
         }
-        if(this.is_piece(side_right)) {
+        if(this.valid_move(side_right) && this.is_piece(side_right) && this.opp_color_at(side_right)) {
             poss_moves.push(side_right);
         }
         poss_moves.forEach( move => {
