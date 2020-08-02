@@ -28,9 +28,10 @@ class Piece {
         let moves = [];
         DIRS.forEach( dir => {
             let extendable = true;
+            let new_pos = this._pos;
             while(extendable) {
                 extendable = false;
-                let new_pos = [this._pos[0] + dir[0], this._pos[1] + dir[1]];
+                new_pos = [new_pos[0] + dir[0], new_pos[1] + dir[1]];
                 if(this.valid_move(new_pos)) {
                     if(!this.is_piece(new_pos)) {
                         extendable = true;
@@ -48,10 +49,6 @@ class Piece {
 
 
 export class Pawn extends Piece{
-    constructor() {
-        super();
-    }
-    
     get_poss_moves() {
         let moves = [];
         const pos_row = this._pos[0];
@@ -87,10 +84,6 @@ export class Pawn extends Piece{
 }
 
 export class Bishop extends Piece{
-    constructor() {
-        super();
-    }
-
     get_poss_moves() {
         const DIRS = [[1,1],[1,-1],[-1,-1],[-1,1]];
         return this.extend_moves(DIRS);
@@ -98,10 +91,6 @@ export class Bishop extends Piece{
 }
 
 export class Knight extends Piece{
-    constructor() {
-        super();
-    }
-
     get_poss_moves() {
         const DIRS = [[1,2],[1,-2],[2,1],[2,-1],[-1,2],[-1,-2],[-2,-1],[-2,1]];
         let moves = [];
@@ -116,9 +105,6 @@ export class Knight extends Piece{
 }
 
 export class Queen extends Piece{
-    constructor() {
-        super();
-    }
 
     get_poss_moves() {
         const DIRS = [[1,1],[1,-1],[-1,-1],[-1,1],[0,1],[1,0],[0,-1],[-1,0]];
@@ -127,10 +113,6 @@ export class Queen extends Piece{
 }
 
 export class King extends Piece{
-    constructor() {
-        super();
-    }
-
     get_poss_moves() {
         const DIRS = [[1,1],[1,-1],[-1,-1],[-1,1],[0,1],[1,0],[0,-1],[-1,0]];
         let moves = [];
@@ -145,10 +127,6 @@ export class King extends Piece{
 }
 
 export class Rook extends Piece{
-    constructor() {
-        super();
-    }
-
     get_poss_moves() {
         const DIRS = [[0,1],[1,0],[0,-1],[-1,0]];
         return this.extend_moves(DIRS);
