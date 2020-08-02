@@ -1,4 +1,4 @@
-import { Pawn, Knight, King, Bishop, Queen, Rook } from './pieces';
+import { Pawn, Knight, King, Bishop, Queen, Rook, NullPiece } from './pieces';
 
 export default class Grid {
     constructor() {
@@ -24,7 +24,7 @@ export default class Grid {
                 }
                 else if(row === 1) this._board[row].push(new Pawn("B", curr_pos, this));
                 else if(row === 6) this._board[row].push(new Pawn("W", curr_pos, this));
-                else this._board[row].push(null);
+                else this._board[row].push(new NullPiece(curr_pos));
             }
         }
     }

@@ -1,3 +1,14 @@
+export class NullPiece {
+    constructor(pos) {
+        this._pos = pos;
+        this._move_disp = false;
+    }
+    get pos() { return this._pos; }
+    get move_disp() { return this._move_disp; }
+    set pos(pos) { this._pos = pos; }
+    set move_disp(move_disp) { this._move_disp = move_disp; }
+}
+
 
 class Piece {
     constructor(color, pos, grid) {
@@ -5,19 +16,22 @@ class Piece {
         this._pos = pos;
         this._grid = grid;
         this._board = grid.board;
+        this._move_disp = false;
     }
     get color() { return this._color; }
     get pos() { return this._pos; }
     get board() { return this._board; }
+    get move_disp() { return this._move_disp; }
     set color(color) { this._color = color; }
     set pos(pos) { this._pos = pos; }
+    set move_disp(move_disp) { this._move_disp = move_disp; }
 
     valid_move(pos) {
         return (pos[0] >= 0 && pos[0] < 8 && pos[1] >= 0 && pos[1] < 8);
     }
 
     is_piece(pos) {
-        return (this._board[pos[0]][pos[1]] !== null);
+        return (!this._board[pos[0]][pos[1]] instanceof NullPiece);
     }
 
     opp_color_at(pos) {
