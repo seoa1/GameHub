@@ -24,7 +24,7 @@ export default class Board extends React.Component{
 
     display_moves(piece) {
         this.clear_display_moves();
-        if(piece instanceof NullPiece || (this.state.selected != null && piece.color === this.state.selected.color)) {
+        if(piece instanceof NullPiece ) {
             this.setState({ selected: null });
             return;
         }

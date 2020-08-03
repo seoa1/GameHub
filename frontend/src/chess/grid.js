@@ -4,8 +4,6 @@ export default class Grid {
     constructor() {
         this._board = [];
         this.build_board();
-        this.w_king = this.piece_at([7,4]);
-        this.b_king = this.piece_at([0,4]);
     }
     get board() { return this._board; }
     set board(board) { this._board = board; }
@@ -51,14 +49,16 @@ export default class Grid {
         this._board[end_pos[0]][end_pos[1]] = piece;
         this._board[start_pos[0]][start_pos[1]] = new NullPiece(start_pos);
         piece.pos = end_pos;
-
     }
 
     find_king(color) {
-        if(color === "W") {
-            return this.w_king.pos;
-        }
-        return this.b_king.pos;
+        let king_pos;
+        this._board.flat().forEach(piece => {
+            if(piece instanceof King && piece.color === color) {
+                king_pos = piece.pos;
+            }
+        });
+        return king_pos;
     }
 
     in_check(color) {
