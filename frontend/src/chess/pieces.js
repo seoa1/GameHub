@@ -10,7 +10,7 @@ export class NullPiece {
 }
 
 
-class Piece {
+export class Piece {
     constructor(color, pos, grid) {
         this._color = color;
         this._pos = pos;
@@ -25,13 +25,18 @@ class Piece {
     set color(color) { this._color = color; }
     set pos(pos) { this._pos = pos; }
     set move_disp(move_disp) { this._move_disp = move_disp; }
+    set board(board) { this._board = board; }
+    set grid(grid) { 
+        this._grid = grid;
+        this._board = grid.board;
+    }
 
     valid_move(pos) {
         return (pos[0] >= 0 && pos[0] < 8 && pos[1] >= 0 && pos[1] < 8);
     }
 
     is_piece(pos) {
-        return !(this._board[pos[0]][pos[1]] instanceof NullPiece);
+        return this.valid_move(pos) && !(this._board[pos[0]][pos[1]] instanceof NullPiece);
     }
 
     opp_color_at(pos) {
@@ -59,6 +64,26 @@ class Piece {
         });
         return moves;
     }
+
+    test_moves_for_check(start_pos, moves, color) {
+        let test_grid = this._grid.duplicate();
+        let poss_moves = [];
+        moves.forEach(move => {
+            test_grid.move_piece(start_pos, move);
+            console.log(test_grid.find_king(color));
+            if(!test_grid.in_check(color)) {
+                poss_moves.push(move);
+            }
+        });
+        console.log(poss_moves);
+        return poss_moves;
+    }
+
+    get_test_moves() {
+        let moves = this.get_poss_moves();
+        return this.test_moves_for_check(this._pos, moves, this._color);
+    }
+
 }
 
 

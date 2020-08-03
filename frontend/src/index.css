@@ -9,6 +9,7 @@
 .grid .square {
   width: 10vh;
   height: 10vh;
+  position: relative;
 }
 
 .even_tile {
@@ -19,15 +20,18 @@
 }
 
 .piece_img {
-  display: block;
   width: 9.5vh;
   height: 9.5vh;
   margin: 0 auto;
 }
 
 .move_dot {
-  width: 20px;
-  height: 20px;
+  width: 1.3vh;
+  height: 1.3vh;
   border-radius: 100%;
   background-color: red;
+  position: absolute;
+  top: 4.35vh;
+  left: 4.35vh;
+  z-index: 5;
 }

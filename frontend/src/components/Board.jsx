@@ -28,7 +28,7 @@ export default class Board extends React.Component{
             this.setState({ selected: null });
             return;
         }
-        let moves = piece.get_poss_moves();
+        let moves = piece.get_test_moves();
         if(moves.length > 0) {
             moves.forEach(move => {
                 this.state.grid.board[move[0]][move[1]].move_disp = true;
