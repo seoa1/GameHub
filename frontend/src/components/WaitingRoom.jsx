@@ -2,7 +2,7 @@ import React from 'react';
 
 const WaitingRoom = () => {
     return (
-        <div>
+        <div className="waiting">
             Waiting for 2nd user...
         </div>
     )

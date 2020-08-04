@@ -2,7 +2,7 @@ import React from 'react';
 
 const Input = ({ message, setMessage, sendMessage }) => {
     return (
-        <form>
+        <form className="inputbar">
             <input className="input"
             type="text"
             placeholder="Type a message..."

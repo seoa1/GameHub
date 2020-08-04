@@ -7,12 +7,10 @@ import Messages from './Messages';
 
 const Chat = ({ name, room, message, messages, send_message, set_message }) => {
     return (
-        <div className="outerContainer">
-            <div className="container">
-                <Infobar room={room}/>
-                <Messages messages={messages} name={name}/>
-                <Input message={message} setMessage={set_message} sendMessage={send_message}/>
-            </div>
+        <div className="container">
+            <Infobar room={room}/>
+            <Messages messages={messages} name={name}/>
+            <Input message={message} setMessage={set_message} sendMessage={send_message}/>
         </div>
     )
 }
