@@ -8,8 +8,8 @@ const addUser = ({ id, name, room }) => {
     if(existingUser) {
         return { error: 'Username is taken' }
     }
-
-    const user = { id, name, room };
+    let player_num = users.length + 1;
+    const user = { id, name, room, player_num };
     users.push(user);
     return {user};
 }

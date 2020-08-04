@@ -18,7 +18,9 @@ export default class Board extends React.Component{
             room: "",
             messages: [],
             message: "",
-            num_users: 0
+            num_users: 0,
+            color: "",
+            my_turn: false
         }
         this.display_moves = this.display_moves.bind(this);
         this.clear_display_moves = this.clear_display_moves.bind(this);
@@ -45,9 +47,19 @@ export default class Board extends React.Component{
         });
 
         this.socket.on('move', move => {
-            console.log(move);
             this.ext_move(move.start, move.end);
-        })
+            this.setState({ my_turn: true });
+        });
+
+        this.socket.on('playerNum', user => {
+            if(user.player_num === 1) {
+                this.setState({ color: "W", my_turn: true });
+            }
+            else if(user.player_num === 2) {
+                this.setState({ color: "B", my_turn: false });
+            }
+        });
+
         return () => {
             this.socket.emit('disconnect');
             this.socket.off();
@@ -72,7 +84,7 @@ export default class Board extends React.Component{
         let end = new_pos;
         this.state.grid.move_piece(start, end);
         this.clear_display_moves();
-        this.setState({ grid: this.state.grid, selected: null });
+        this.setState({ grid: this.state.grid, selected: null, my_turn: false });
         this.socket.emit('move', { start, end });
     }
 
@@ -83,9 +95,15 @@ export default class Board extends React.Component{
     }
 
     display_moves(piece) {
+        if(!this.state.my_turn) {
+            return;
+        }
         this.clear_display_moves();
         if(piece instanceof NullPiece ) {
             this.setState({ selected: null });
+            return;
+        }
+        if(piece.color !== this.state.color) {
             return;
         }
         let moves = piece.get_test_moves();
@@ -110,7 +128,10 @@ export default class Board extends React.Component{
             <div className="board">
                 {this.state.num_users >= 2 ? 
                 <div>
-                <ChessGrid move_sel={this.move_sel} grid={this.state.grid} display={this.display_moves}/>
+                <ChessGrid move_sel={this.move_sel} 
+                grid={this.state.grid} 
+                display={this.display_moves}
+                color={this.state.color}/>
                 <Chat location={this.props.location} 
                 name={this.state.name} 
                 room={this.state.room}
