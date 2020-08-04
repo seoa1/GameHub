@@ -1,0 +1,24 @@
+{
+  "name": "game_hub",
+  "version": "1.0.0",
+  "description": "In the project directory, you can run:",
+  "main": "index.js",
+  "dependencies": {
+    "concurrently": "^5.2.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "both": "concurrently \"npm start --prefix backend\" \"npm start --prefix frontend\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/seoa1/GameHub.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/seoa1/GameHub/issues"
+  },
+  "homepage": "https://github.com/seoa1/GameHub#readme"
+}

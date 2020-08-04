@@ -2,6 +2,9 @@ import React from 'react';
 import Grid from '../chess/grid';
 import ChessGrid from './ChessGrid';
 import {NullPiece} from '../chess/pieces';
+import Chat from './message_box/Chat';
+import queryString from 'query-string';
+import io from 'socket.io-client';
 
 export default class Board extends React.Component{
     constructor(props) {
@@ -9,11 +12,47 @@ export default class Board extends React.Component{
 
         this.state = {
             grid: new Grid(),
-            selected: null
+            selected: null,
+            name: "",
+            room: "",
+            messages: [],
+            message: ""
         }
         this.display_moves = this.display_moves.bind(this);
         this.clear_display_moves = this.clear_display_moves.bind(this);
         this.move_sel = this.move_sel.bind(this);
+        this.send_message = this.send_message.bind(this);
+        const ENDPOINT = 'http://localhost:5000';
+        this.socket = io(ENDPOINT);
+        this.set_message = this.set_message.bind(this);
+    }
+
+    componentDidMount() {
+        const {name, room} = queryString.parse(this.props.location.search);
+        console.log(name, room);
+        this.setState({ name, room });
+        this.socket.emit('join', { name, room }, () => {});
+
+        this.socket.on('message', message => {
+            this.setState({ messages: [...this.state.messages, message ]});
+        })
+        return () => {
+            this.socket.emit('disconnect');
+            this.socket.off();
+        }
+    }
+
+
+    set_message(event, message) {
+        event.preventDefault();
+        this.setState({message});
+    }
+
+    send_message(event) {
+        event.preventDefault();
+        if(this.state.message) {
+            this.socket.emit('sendMessage', this.state.message, () => this.setState({ message: "" }));
+        }
     }
 
     move_sel(new_pos) {
@@ -49,6 +88,13 @@ export default class Board extends React.Component{
         return (
             <div className="board">
                 <ChessGrid move_sel={this.move_sel} grid={this.state.grid} display={this.display_moves}/>
+                <Chat location={this.props.location} 
+                name={this.state.name} 
+                room={this.state.room}
+                message={this.state.message}
+                messages={this.state.messages}
+                send_message={this.send_message}
+                set_message={this.set_message}/>
             </div>
         )
     }
