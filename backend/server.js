@@ -44,6 +44,11 @@ io.on('connection', (socket) => {
             io.to(user.room).emit('message', { user: 'admin', text: `${user.name} has left!`})
         }
     });
+
+    socket.on('move', (move) => {
+        const user = getUser(socket.id);
+        socket.broadcast.to(user.room).emit('move', move);
+    })
 });
 
 app.use(router);

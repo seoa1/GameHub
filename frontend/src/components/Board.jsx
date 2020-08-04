@@ -5,6 +5,7 @@ import {NullPiece} from '../chess/pieces';
 import Chat from './message_box/Chat';
 import queryString from 'query-string';
 import io from 'socket.io-client';
+import WaitingRoom from './WaitingRoom';
 
 export default class Board extends React.Component{
     constructor(props) {
@@ -16,7 +17,8 @@ export default class Board extends React.Component{
             name: "",
             room: "",
             messages: [],
-            message: ""
+            message: "",
+            num_users: 0
         }
         this.display_moves = this.display_moves.bind(this);
         this.clear_display_moves = this.clear_display_moves.bind(this);
@@ -25,6 +27,7 @@ export default class Board extends React.Component{
         const ENDPOINT = 'http://localhost:5000';
         this.socket = io(ENDPOINT);
         this.set_message = this.set_message.bind(this);
+        this.ext_move = this.ext_move.bind(this);
     }
 
     componentDidMount() {
@@ -35,6 +38,15 @@ export default class Board extends React.Component{
 
         this.socket.on('message', message => {
             this.setState({ messages: [...this.state.messages, message ]});
+        });
+
+        this.socket.on('roomData', room_data => {
+            this.setState({ num_users: room_data.users.length });
+        });
+
+        this.socket.on('move', move => {
+            console.log(move);
+            this.ext_move(move.start, move.end);
         })
         return () => {
             this.socket.emit('disconnect');
@@ -56,7 +68,16 @@ export default class Board extends React.Component{
     }
 
     move_sel(new_pos) {
-        this.state.grid.move_piece(this.state.selected.pos, new_pos);
+        let start = this.state.selected.pos;
+        let end = new_pos;
+        this.state.grid.move_piece(start, end);
+        this.clear_display_moves();
+        this.setState({ grid: this.state.grid, selected: null });
+        this.socket.emit('move', { start, end });
+    }
+
+    ext_move(start, end) {
+        this.state.grid.move_piece(start, end);
         this.clear_display_moves();
         this.setState({ grid: this.state.grid, selected: null });
     }
@@ -87,6 +108,8 @@ export default class Board extends React.Component{
     render() {
         return (
             <div className="board">
+                {this.state.num_users >= 2 ? 
+                <div>
                 <ChessGrid move_sel={this.move_sel} grid={this.state.grid} display={this.display_moves}/>
                 <Chat location={this.props.location} 
                 name={this.state.name} 
@@ -95,6 +118,8 @@ export default class Board extends React.Component{
                 messages={this.state.messages}
                 send_message={this.send_message}
                 set_message={this.set_message}/>
+                </div> : 
+                <WaitingRoom/>}
             </div>
         )
     }
